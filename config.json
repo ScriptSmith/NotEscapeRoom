@@ -1,5 +1,5 @@
 {
-    "SQLALCHEMY_DATABASE_URL": "postgres://cfecwyqepgeqqn:5d609791cc8a23cf9e1e96d288c652fc4b73cc7c02b54fa87bee7074f4f80f37@ec2-54-83-59-144.compute-1.amazonaws.com:5432/d4sjslbjgpbiab",
+    "SQLALCHEMY_DATABASE_URI": "postgres://cfecwyqepgeqqn:5d609791cc8a23cf9e1e96d288c652fc4b73cc7c02b54fa87bee7074f4f80f37@ec2-54-83-59-144.compute-1.amazonaws.com:5432/d4sjslbjgpbiab",
     "SQLALCHEMY_COMMIT_ON_TEARDOWN": true,
     "SQLALCHEMY_TRACK_MODIFICATIONS": true,
     "SECRET_KEY": "a REAL legit secret"
