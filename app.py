@@ -59,8 +59,27 @@ def create_game():
 
     response = {
         'game': game.id,
-        'hub': hub.id
+        'hub': hub.id,
+        'key': hub.key
     }
+
+    return jsonify(response)
+
+
+@app.route('/join_game')
+def join_game():
+    game_id = request.args.get('game')
+    game = Game.query.filter_by(id=game_id).first()
+
+    response = {
+        'message': 'failed',
+    }
+
+    if game:
+        client = Client(game=game_id, score=0)
+        db.session.add(client)
+        response['client'] = client.id
+        response['message'] = 'succeeded'
 
     return jsonify(response)
 
