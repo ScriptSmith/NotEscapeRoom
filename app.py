@@ -2,6 +2,39 @@ from flask import *
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
+app.config.from_json('config.json')
+
+db = SQLAlchemy(app)
+
+
+class Game(db.Model):
+    __tablename__ = "games"
+    id = db.Column(db.Integer, primary_key=True)
+    hub = db.Column(db.Integer, db.ForeignKey('hubs.id'))
+    clients = db.relationship("Client", backref="clients")
+    complete = db.Column(db.Boolean)
+
+
+class Hub(db.Model):
+    __tablename__ = "hubs"
+    id = db.Column(db.Integer, primary_key=True)
+
+    # Ex: 'UUDDLLRRDRUL'
+    key = db.Column(db.String)
+    # Ex: 'UU..LL..DRUL'
+    progress = db.Column(db.String)
+
+
+class Client(db.Model):
+    __tablename__ = "clients"
+    id = db.Column(db.Integer, primary_key=True)
+    score = db.Column(db.Integer)
+
+
+def create_tables():
+    db.drop_all()
+    db.create_all()
+    db.session.commit()
 
 
 @app.route('/')
@@ -10,4 +43,5 @@ def root():
 
 
 if __name__ == '__main__':
+    create_tables()
     app.run(debug=True)
