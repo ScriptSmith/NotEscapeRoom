@@ -56,7 +56,7 @@ def end():
 	
 @app.route('/instructions')
 def instructions():
-	return render_template("instructions.html")
+    return render_template("instructions.html")
 
 def desktop():
     hub_id = session.get('hub')
