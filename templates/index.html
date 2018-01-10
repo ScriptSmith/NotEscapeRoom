@@ -1,10 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Site</title>
-</head>
-<body>
-Static web server
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block body %}
+    <p>BODY TEXT</p>
+
+
+    Hello {{ name }}
+
+    {% if started %}
+        <p>Game started</p>
+    {% else %}
+        <p>Game not started</p>
+    {% endif %}
+
+{% endblock %}

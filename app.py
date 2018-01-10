@@ -41,7 +41,10 @@ def create_tables():
 
 @app.route('/')
 def root():
-    return render_template("index.html")
+    name = request.args.get('name')
+    name = 'Player' if not name else name
+    started = request.args.get('started')
+    return render_template("index.html", name=name, started=started)
 
 
 def generate_key(length):
