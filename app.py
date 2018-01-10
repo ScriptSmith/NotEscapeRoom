@@ -58,7 +58,7 @@ def end():
 def desktop():
     hub_id = session.get('hub')
     game_id = session.get('game')
-    if not hub_id and not game_id:
+    if not hub_id or not game_id:
         hub = create_hub()
         game = create_game(hub)
         db.session.commit()
