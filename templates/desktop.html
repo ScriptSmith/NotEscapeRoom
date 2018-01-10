@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block body %}
+    <table class="pure-table">
+        <tr>
+            <td>Key</td>
+            {% for char in hub.key %}
+                <td>{{ char }}</td>
+            {% endfor %}
+        </tr>
+        <tr>
+            <td>Progress</td>
+            {% for char in hub.progress %}
+                <td>{{ char }}</td>
+            {% endfor %}
+        </tr>
+    </table>
+    <p>Code: {{ game.code }}</p>
+{% endblock %}
