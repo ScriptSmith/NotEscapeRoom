@@ -44,7 +44,7 @@ def create_tables():
 @app.route('/')
 def root():
     if request.user_agent.platform in ['android', 'ios']:
-        return render_template("mobile.html")
+        return mobile()
     else:
         return desktop()
 
@@ -54,6 +54,11 @@ def desktop():
     game = create_game(hub)
     db.session.commit()
     return render_template("desktop.html", game=game, hub=hub)
+
+
+def mobile():
+    # do stuff
+    return render_template("mobile.html")
 
 
 def create_hub():
