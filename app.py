@@ -65,8 +65,11 @@ def desktop():
         session['game'] = game.id
         session['hub'] = hub.id
     else:
-        game = Game.query.filter_by(id=game_id).first()
         hub = Hub.query.filter_by(id=hub_id).first()
+        game = Game.query.filter_by(id=game_id).first()
+
+        if not hub or not game:
+            return end()
 
     return render_template("desktop.html", game=game, hub=hub)
 
