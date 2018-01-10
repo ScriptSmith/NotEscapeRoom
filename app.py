@@ -49,10 +49,25 @@ def root():
         return desktop()
 
 
+@app.route('/end')
+def end():
+    session.clear()
+    return redirect('/')
+
+
 def desktop():
-    hub = create_hub()
-    game = create_game(hub)
-    db.session.commit()
+    hub_id = session.get('hub')
+    game_id = session.get('game')
+    if not hub_id and not game_id:
+        hub = create_hub()
+        game = create_game(hub)
+        db.session.commit()
+        session['game'] = game.id
+        session['hub'] = hub.id
+    else:
+        game = Game.query.filter_by(id=game_id).first()
+        hub = Hub.query.filter_by(id=hub_id).first()
+
     return render_template("desktop.html", game=game, hub=hub)
 
 
