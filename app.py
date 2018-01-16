@@ -107,6 +107,7 @@ def generate_join_code():
 def generate_key(length):
     return ''.join(random.choices("↖↗↘↙←↓↑→", k=length))
 
+
 @app.route('/scan')
 def instascan():
     return render_template("instascan.html")
