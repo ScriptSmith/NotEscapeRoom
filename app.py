@@ -58,7 +58,10 @@ def end():
 @app.route('/instructions')
 def instructions():
     return render_template("mobile/instructions.html")
-
+	
+@app.route('/scan')
+def scan():
+	return render_template("mobile/scan.html")
 
 def desktop():
     hub_id = session.get('hub')
