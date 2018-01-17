@@ -108,6 +108,11 @@ def generate_key(length):
     return ''.join(random.choices("↖↗↘↙←↓↑→", k=length))
 
 
+@app.route('/scan')
+def instascan():
+    return render_template("instascan.html")
+
+
 if __name__ == '__main__':
     create_tables()
     app.run(debug=True)
