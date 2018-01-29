@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 
+{% block head %}
+  {{ super() }}
+  <script type="text/javascript" src="{{url_for('static', filename='javascript/probability.js')}}"></script>
+{% endblock %}
+
 {% block body %}
     <h1>SCAN SOMETHING PLS</h1>
 	<br>
@@ -11,14 +16,40 @@
       scanner.addListener('scan', function (content) {
         console.log(content);
 		switch(content) {
+			case "PICKUP":
+				<!-- New photon picked up -->
+				<!--  - assign spin -->
+				<!--  - set localstorage flags (spinKnown & spin)-->
+				localStorage.setItem("spinKnown", "false");
+				var spin = chooseSpin();
+				localStorage.setItem("spin", spin);
+				break;
+			case "MEAUREUPDOWN":
+				measureSpin(localStorage.getItem("spin"), "UPDOWN");
+				console.log("Spin is now: " + localStorage.getItem("spin"));
+				//we just measured, so spin is now known				
+				localStorage.setItem("spinKnown", "true");
+				break;
+			case "MEASURELEFTRIGHT":
+				measureSpin(localStorage.getItem("spin"), "LEFTRIGHT");
+				console.log("Spin is now: " + localStorage.getItem("spin"));			
+				localStorage.setItem("spinKnown", "true");
+				break;
+			case "MEASUREUPRIGHTDOWNLEFT":
+				measureSpin(localStorage.getItem("spin"), "UPRIGHTDOWNLEFT");
+				console.log("Spin is now: " + localStorage.getItem("spin"));			
+				localStorage.setItem("spinKnown", "true");
+				break;
+			case "MEASUREUPLEFTDOWNRIGHT":
+				measureSpin(localStorage.getItem("spin"), "UPLEFTDOWNRIGHT");
+				console.log("Spin is now: " + localStorage.getItem("spin"));			
+				localStorage.setItem("spinKnown", "true");
+				break;
 			case "SUBMIT":
 				console.log("submitting photon");
 				break;
-			case "PICKUP":
-				console.log("picking up photon");
-				break;
 			default:
-				console.log("doing default behaviour");
+				console.log("Didn't recognise that one");
 		}
       });
       Instascan.Camera.getCameras().then(function (cameras) {
