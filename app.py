@@ -85,7 +85,6 @@ def desktop():
 
 
 def mobile():
-    # do stuff
     return render_template("mobile.html")
 
 
@@ -119,7 +118,7 @@ def add_to_game():
     photon = request.args.get('photon')
 
     if game_id and game_id != 'NaN':
-        game = Game.query.filter_by(id=game_id).first()
+        game = Game.query.filter_by(code=game_id).first()
         if game:
             hub = Hub.query.filter_by(id=game.hub)
             if hub:

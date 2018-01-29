@@ -47,24 +47,28 @@
             $("#photon").html(text);
         }
 
-        let scanner = new Instascan.Scanner({video: document.getElementById('preview')});
+        var scanner = new Instascan.Scanner({
+            video: document.getElementById('preview'),
+            mirror: false,
+            backgroundScan: false
+        });
         scanner.addListener('scan', function (content) {
-            console.log(content);
-            if (!joined) {
-                gameId = parseInt(content)
-            }
-            if (content === "A") { // Hub
-                if (state === -1) { // Add new photon
-                    state = 0;
-                    $("#photon").html("✓ Photon");
-                } else { // Add current photon to station
-                    sending = true;
-                    sendPhoton();
+{#            console.log("Scanned: " + content);#}
+            alert(content);
+            if (!joined) { // Join game
+                joined = true;
+                gameId = content;
+                state = 0; // Pick up photon
+            } else { // Measure station or hub
+                if (content === gameId) { // Hub
+                    if (state !== 0) { // Already have photon
+                        sendPhoton()
+                    } else {
+                        state = 0;
+                    }
+                } else {
+                    state = measure(content)
                 }
-            }
-            else {
-                    state = measure(content);
-                    setHeading(state.toString() +  " Photon");
             }
         });
         Instascan.Camera.getCameras().then(function (cameras) {
