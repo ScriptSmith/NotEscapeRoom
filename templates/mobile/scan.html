@@ -6,7 +6,7 @@
 
 
     <video id="preview"></video>
-{#    <button onclick="scan()">SCAN</button>#}
+    <button onclick="scan()">SCAN</button>
     <script type="text/javascript">
         // joined game yet
         var joined = false;
@@ -49,22 +49,23 @@
         }
 
         var scanner = new Instascan.Scanner({
+            continuous: false,
             video: document.getElementById('preview'),
             mirror: false,
             backgroundScan: false
         });
 
-{#        function scan() {#}
-{#            var result = scanner.scan();#}
-{#            if (result !== null) {#}
-{#                alert(result.content)#}
-{#            } else {#}
-{#                alert("Nothing")#}
-{#            }#}
-{#        }#}
+        function scan() {
+            var result = scanner.scan();
+            if (result !== null) {
+                alert(result.content)
+            } else {
+                alert("Nothing")
+            }
+        }
         scanner.addListener('scan', function (content) {
 {#            console.log("Scanned: " + content);#}
-            alert(content);
+            alert("RAN");
             if (!joined) { // Join game
                 joined = true;
                 gameId = content;
