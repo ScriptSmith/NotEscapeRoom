@@ -1,39 +1,85 @@
 {% extends "base.html" %}
 
 {% block body %}
-    <h1>SCAN SOMETHING PLS</h1>
-	<br>
-	
-	
-	<video id="preview"></video>
+    <div id="photon"></div>
+    <br>
+
+
+    <video id="preview"></video>
     <script type="text/javascript">
-      let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
-      scanner.addListener('scan', function (content) {
-        console.log(content);
-		switch(content) {
-			case "SUBMIT":
-				console.log("submitting photon");
-				break;
-			case "PICKUP":
-				console.log("picking up photon");
-				break;
-			default:
-				console.log("doing default behaviour");
-		}
-      });
-      Instascan.Camera.getCameras().then(function (cameras) {
-        if (cameras.length > 0) {
-			if (cameras.length > 1) {
-				scanner.start(cameras[1]);
-			} else {
-				scanner.start(cameras[0]);
-			}
-        } else {
-          console.error('No cameras found.');
+        // joined game yet
+        var joined = false;
+        var gameId = -1;
+
+        // -1 no photon
+        // 0 unmeasured
+        // 1 spin 1
+        // 2 spin 2 ...
+        var state = -1;
+
+        // Sending current photon to hub
+        var sending = false;
+
+        function measure(station) {
+            return Math.round(Math.random() * 4)
         }
-      }).catch(function (e) {
-        console.error(e);
-      });
+
+        function sendPhoton() {
+            var params = {
+                'game': gameId,
+                'photon': state
+            };
+            $.get("/add_photon", params, function (data) {
+                if (data === true) {
+                    state = -1
+                } else {
+                    console.log("not in hub")
+                }
+                sending = false;
+            }).fail(function (data) {
+                console.log("error");
+                console.log(data);
+                sending = false;
+            })
+        }
+
+        function setHeading(text) {
+            $("#photon").html(text);
+        }
+
+        let scanner = new Instascan.Scanner({video: document.getElementById('preview')});
+        scanner.addListener('scan', function (content) {
+            console.log(content);
+            if (!joined) {
+                gameId = parseInt(content)
+            }
+            if (content === "A") { // Hub
+                if (state === -1) { // Add new photon
+                    state = 0;
+                    $("#photon").html("✓ Photon");
+                } else { // Add current photon to station
+                    sending = true;
+                    sendPhoton();
+                }
+            }
+            else {
+                    state = measure(content);
+                    setHeading(state.toString() +  " Photon");
+            }
+        });
+        Instascan.Camera.getCameras().then(function (cameras) {
+            if (cameras.length > 0) {
+                if (cameras.length > 1) {
+                    scanner.start(cameras[1]);
+                } else {
+                    scanner.start(cameras[0]);
+                }
+            } else {
+                console.error('No cameras found.');
+            }
+        }).catch(function (e) {
+            console.error(e);
+        });
     </script>
-	
+
 {% endblock %}

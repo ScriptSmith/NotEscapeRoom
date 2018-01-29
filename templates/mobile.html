@@ -12,6 +12,6 @@
 		<input type='text'>
 		<input type='submit' value="JOIN">
 	</form>
-	<button> <a href= "{{ url_for('instructions') }}"> Next page </a> </button>
+	<input type="submit" onclick="window.location = '{{ url_for("instructions") }}'" value="Next page"></input>
 
 {% endblock %}
