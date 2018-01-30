@@ -29,6 +29,18 @@
             transform: translate(-50%, -50%);
         }
 
+        #score {
+            width: 150px;
+            height: 150px;
+            position: fixed;
+            left: 10%;
+            background-color: yellow;
+            z-index: 10000;
+            border-radius: 10px;
+            font-size: 80px;
+            text-align: center;
+        }
+
         #photon {
             width: 20%;
             height: 10%;
@@ -59,6 +71,7 @@
 {% endblock %}
 
 {% block body %}
+    <div id="score"></div>
     <div id="photon"></div>
     <div id="info" onclick="localStorage.clear();"></div>
     <div class="video-container">
@@ -91,6 +104,9 @@
         // 2 spin 2 ...
         var state = -1;
 
+        var score = 0;
+        var measureCount = 0;
+
         // Sending current photon to hub
         var sending = false;
 
@@ -109,9 +125,15 @@
                     console.log("Successfully logged photon in progress");
                     alertify.success("Photon matched!");
                     state = 0;
+
+                    score += Math.round(100 / measureCount);
+
+                    measureCount = 0;
                     setTimeout(function () {
+                        setScore(score);
                         setHeading(state);
                         alertify.message("Grabbed new photon");
+                        window.navigator.vibrate(200)
                     }, 2000);
                 } else {
                     alertify.error("Photon not in hub");
@@ -141,6 +163,12 @@
             $("#photon").html(heading);
         }
 
+        function setScore(score) {
+            $("#score").html(score)
+        }
+
+        setScore(0);
+
         scanner.addListener('scan', function (content) {
 
                 console.info("Read: " + content);
@@ -153,6 +181,7 @@
                     setTimeout(function () {
                         setHeading(state);
                         alertify.message("Grabbed new photon")
+                        window.navigator.vibrate(200)
                     }, 2000);
 
                 } else { // Measure station or hub
@@ -161,6 +190,7 @@
                             sendPhoton()
                         }
                     } else {
+                        measureCount++;
                         //pass in previous spin and measurement direction
                         if (state === 0) {
                             console.log("Assigned random state");
@@ -175,6 +205,7 @@
                         setTimeout(function () {
                             setHeading(state);
                             alertify.success("Measured");
+                            window.navigator.vibrate(200)
                         }, 3000)
                     }
                 }
