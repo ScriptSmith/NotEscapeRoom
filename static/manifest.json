@@ -2,12 +2,13 @@
   "name": "Hot Take",
   "icons": [
     {
-      "src": "static/images/icon.png",
+      "src": "/static/images/icon.png",
       "sizes": "512x512",
       "type": "image/png",
       "density": 4.0
     }
   ],
+  "start_url": "/",
   "display": "standalone",
   "orientation": "portrait"
 }
