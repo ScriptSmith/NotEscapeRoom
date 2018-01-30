@@ -81,7 +81,8 @@ def mobile():
 def create_game():
     game = Game(code=generate_join_code(), complete=False,
                 key=generate_key(5), progress='.....')
-    return db.session.merge(game)
+    db.session.add(game)
+    return game
 
 
 def generate_join_code():
@@ -104,10 +105,10 @@ def add_to_game():
     if game_id and game_id != 'NaN':
         game = Game.query.filter_by(code=game_id).first()
         if game:
-                for i, char in enumerate(game.progress):
-                    if char == photon:
-                        game.key[i] = photon
-                        return jsonify(True)
+            for i, char in enumerate(game.progress):
+                if char == photon:
+                    game.key[i] = photon
+                    return jsonify(True)
     return jsonify(False)
 
 
@@ -117,5 +118,5 @@ def instascan():
 
 
 if __name__ == '__main__':
-    create_tables()
+    # create_tables()
     app.run(debug=True, host='0.0.0.0')
