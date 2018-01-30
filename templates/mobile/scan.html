@@ -31,49 +31,55 @@
 
         #score {
             width: 20%;
-            height: 10%;
-            position: fixed;
+            height: 100%;
+            float: left;
             left: 10%;
             background-color: yellow;
-            z-index: 10000;
-            border-radius: 10px;
-            font-size: 80px;
+            font-size: 20pt;
             text-align: center;
         }
 
         #photon {
-            width: 20%;
-            height: 10%;
-            position: fixed;
-            left: 40%;
+            width: 60%;
+            height: 100%;
+            float: left;
             background-color: red;
-            z-index: 10000;
-            font-size: 100px;
+            font-size: 70pt;
+            line-height: 0.65;
             text-align: center;
-            border-radius: 10px;
         }
 
         #info {
-            width: 50px;
-            height: 50px;
-            position: fixed;
-            left: 90%;
+            float: left;
+            width: 20%;
+            height: 100%;
             background-color: blue;
-            z-index: 10000;
-
+            text-align: center;
+            font-size: 40pt;
         }
 
         .ajs-message {
             font-size: 40px;
         }
 
+        #topbar {
+            width: 100%;
+            height: 7%;
+            position: fixed;
+            left: 0;
+            z-index: 10000;
+        }
+
     </style>
 {% endblock %}
 
 {% block body %}
-    <div id="score"></div>
-    <div id="photon"></div>
-    <div id="info" onclick="localStorage.clear();"></div>
+    <div id="topbar">
+        <div id="score"></div>
+        <div id="photon"></div>
+        <div id="info">Help</div>
+    </div>
+
     <div class="video-container">
         <video id="preview" style=""></video>
     </div>
@@ -164,7 +170,7 @@
         }
 
         function setScore(score) {
-            $("#score").html(score)
+            $("#score").html("Score: " + score)
         }
 
         setScore(0);
