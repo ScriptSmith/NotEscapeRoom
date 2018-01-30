@@ -1,12 +1,13 @@
 {
-  "name": "Photon Folly",
-  "display": "standalone",
+  "name": "Hot Take",
   "icons": [
     {
       "src": "static/images/icon.png",
-      "sizes": "any",
+      "sizes": "512x512",
       "type": "image/png",
       "density": 4.0
     }
-  ]
+  ],
+  "display": "standalone",
+  "orientation": "portrait"
 }
