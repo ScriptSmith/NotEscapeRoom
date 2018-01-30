@@ -12,15 +12,9 @@ db = SQLAlchemy(app)
 class Game(db.Model):
     __tablename__ = "games"
     id = db.Column(db.Integer, primary_key=True)
-    hub = db.Column(db.Integer, db.ForeignKey('hubs.id'))
     clients = db.relationship("Client", backref="clients")
     code = db.Column(db.String)
     complete = db.Column(db.Boolean)
-
-
-class Hub(db.Model):
-    __tablename__ = "hubs"
-    id = db.Column(db.Integer, primary_key=True)
 
     # Ex: '↖↗↘↙'
     key = db.Column(db.String)
@@ -66,38 +60,28 @@ def scan():
 
 
 def desktop():
-    hub_id = session.get('hub')
     game_id = session.get('game')
-    if not hub_id or not game_id:
-        hub = create_hub()
-        game = create_game(hub)
+    if not game_id:
+        game = create_game()
         db.session.commit()
         session['game'] = game.id
-        session['hub'] = hub.id
     else:
-        hub = Hub.query.filter_by(id=hub_id).first()
         game = Game.query.filter_by(id=game_id).first()
 
-        if not hub or not game:
+        if not game:
             return end()
 
-    return render_template("desktop.html", game=game, hub=hub)
+    return render_template("desktop.html", game=game)
 
 
 def mobile():
     return render_template("mobile.html")
 
 
-def create_hub():
-    hub = Hub(key=generate_key(5), progress='.....')
-    db.session.add(hub)
-    return hub
-
-
-def create_game(hub):
-    game = Game(hub=hub.id, code=generate_join_code(), complete=False)
-    db.session.add(game)
-    return game
+def create_game():
+    game = Game(code=generate_join_code(), complete=False,
+                key=generate_key(5), progress='.....')
+    return db.session.merge(game)
 
 
 def generate_join_code():
@@ -123,11 +107,17 @@ def add_to_game():
     if game_id and game_id != 'NaN':
         game = Game.query.filter_by(code=game_id).first()
         if game:
+<<<<<<< HEAD
             hub = Hub.query.filter_by(id=game.hub)
             if hub:
                 for i, char in enumerate(hub.key):
                     if char == photon:
                         hub.progress[i] = photon
+=======
+                for i, char in enumerate(game.progress):
+                    if char == photon:
+                        game.key[i] = photon
+>>>>>>> e1a785b0427a54f38fc81b61229b94e71c17cc4d
                         return jsonify(True)
     return jsonify(False)
 
@@ -138,5 +128,5 @@ def instascan():
 
 
 if __name__ == '__main__':
-    # create_tables()
+    create_tables()
     app.run(debug=True, host='0.0.0.0')

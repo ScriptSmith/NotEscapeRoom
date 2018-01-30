@@ -26,5 +26,20 @@
     $('#qrcode').qrcode({render: 'table',text: "{{ game.code }}", width: ($(window).width()/2) -20, height: ($(window).width()/2) - 20});
 
     </script>
+	<script type='text/javascript'>
+		(function poll(){
+			setTimeout(function(){
+				$.ajax({ url: "server", success: function(data){
+					//progress diff
+					
+					//Update page
+					
+					//Setup the next poll recursively
+					poll();
+				}, dataType: "json"});
+			}, 30000);
+		})();
+		
+	</script>
 
 {% endblock %}

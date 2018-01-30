@@ -1,30 +1,78 @@
 {% extends "base.html" %}
 
 {% block head %}
-  {{ super() }}
-  <script type="text/javascript" src="{{url_for('static', filename='javascript/probability.js')}}"></script>
+    {{ super() }}
+    <script type="text/javascript" src="{{ url_for('static', filename='javascript/probability.js') }}"></script>
+    <style>
+        .video-container {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .video-container video {
+            /* Make video to at least 100% wide and tall */
+            min-width: 100%;
+            min-height: 100%;
+
+            /* Setting width & height to auto prevents the browser from stretching or squishing the video */
+            width: auto;
+            height: auto;
+
+            /* Center the video */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        #photon {
+            width: 50%;
+            height: 10%;
+            position: fixed;
+            left: 25%;
+            background-color: red;
+            z-index: 10000;
+            font-size: 40px;
+        }
+
+        #info {
+            width: 50px;
+            height: 50px;
+            position: fixed;
+            left: 90%;
+            background-color: blue;
+            z-index: 10000;
+
+        }
+    </style>
 {% endblock %}
 
 {% block body %}
-    <div id="photon"></div>
     <br>
 
+    <div id="photon"></div>
+    <div id="info" onclick="localStorage.clear();"></div>
+    <div class="video-container">
+        <video id="preview" style=""></video>
+    </div>
 
-    <video id="preview"></video>
-    <button onclick="scan()">SCAN</button>
     <script type="text/javascript">
-	  
-      Instascan.Camera.getCameras().then(function (cameras) {
-        if (cameras.length > 0) {
-			if (cameras.length > 1) {
-				scanner.start(cameras[1]);
-			} else {
-				scanner.start(cameras[0]);
-			}
-        } else {
-          console.error('No cameras found.');
-		}
-		});
+
+        Instascan.Camera.getCameras().then(function (cameras) {
+            if (cameras.length > 0) {
+                if (cameras.length > 1) {
+                    scanner.start(cameras[1]);
+                } else {
+                    scanner.start(cameras[0]);
+                }
+            } else {
+                console.error('No cameras found.');
+            }
+        });
         // joined game yet
         var joined = false;
         var gameId = -1;
@@ -38,11 +86,11 @@
         // Sending current photon to hub
         var sending = false;
 
-        function measure(station) {
-            return Math.round(Math.random() * 4)
-        }
-
         function sendPhoton() {
+            if (sending) {
+                return;
+            }
+            sending = true;
             var params = {
                 'game': gameId,
                 'photon': state
@@ -61,36 +109,25 @@
             })
         }
 
-        function setHeading(text) {
-            $("#photon").html(text);
-        }
-
         var scanner = new Instascan.Scanner({
-            continuous: false,
             video: document.getElementById('preview'),
             mirror: false,
             backgroundScan: false
         });
 
-        function scan() {
-            var result = scanner.scan();
-            if (result !== null) {
-                alert(result.content)
-            } else {
-                alert("Nothing")
-            }
-        }
         scanner.addListener('scan', function (content) {
-{#            console.log("Scanned: " + content);#}
-            alert("RAN");
+            alert(content);
             if (!joined) { // Join game
                 joined = true;
                 gameId = content;
-				//assign photon spin (unknown to player)
-				localStorage.setItem("spinKnown", "false");
-				var spin = chooseSpin();
-				localStorage.setItem("spin", spin);
+                //assign photon spin (unknown to player)
+                localStorage.setItem("spinKnown", "false");
+                var spin = chooseSpin();
+                console.log("Chose spin: " + spin);
+                localStorage.setItem("spin", spin);
                 state = 0; // Pick up photon
+                $("#photon").html(state)
+
             } else { // Measure station or hub
                 if (content === gameId) { // Hub
                     if (state !== 0) { // Already have photon
@@ -99,10 +136,12 @@
                         state = 0;
                     }
                 } else {
-					//pass in previous spin and measurement direction
-					state = measureSpin(localStorage.getItem("spin"), content);	
-					localStorage.setItem("spin", state);
-					localStorage.setItem("spinKnown", "true");
+                    //pass in previous spin and measurement direction
+                    state = measureSpin(localStorage.getItem("spin"), content);
+                    console.log("Measured state: " + state);
+                    localStorage.setItem("spin", state);
+                    localStorage.setItem("spinKnown", "true");
+                    $("#photon").html(state)
                 }
             }
         });
