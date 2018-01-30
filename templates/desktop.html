@@ -1,9 +1,46 @@
 {% extends "base.html" %}
 
+{% block head %}
+    <style>
+
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        body {
+            background: linear-gradient(225deg, #ffabab, #ffdaab, #ddffab, #abe4ff, #d9abff);
+            background-size: 300% 300%;
+            box-sizing: border-box;
+            display: table;
+            height: 100vh;
+            margin: 0;
+            position: relative;
+            width: 100vw;
+            -webkit-animation: Rainbow 25s ease infinite;
+            -moz-animation: Rainbow 25s ease infinite;
+            animation: Rainbow 25s ease infinite;
+        }
+
+        @-webkit-keyframes Rainbow {
+            0% {
+                background-position: 94% 0%;
+            }
+            50% {
+                background-position: 7% 100%;
+            }
+            100% {
+                background-position: 94% 0%;
+            }
+        }
+    </style>
+{% endblock %}
+
 {% block body %}
     <div style="width: 100%; padding: 20px;">
         <div style="float: left; width: 50%;">
-            <div id="qrcode"></div>
+            <canvas id="qr"></canvas>
         </div>
         <div style="float: right; width: 50%;">
             <table class="pure-table" id="progress">
@@ -23,30 +60,45 @@
             <a href="end">New game</a></div>
     </div>
     <script>
-    $('#qrcode').qrcode({render: 'table',text: "{{ game.code }}", width: ($(window).width()/2) -20, height: ($(window).width()/2) - 20});
+        var qr = new QRious({
+            element: document.getElementById('qr'),
+            backgroundAlpha: 0.25,
+            value: '{{ game.code }}',
+            size: ($(window).width() / 2) - 20,
+        });
+
+        {#qr.canvas.parentNode.appendChild(qr.image);#}
+
+        {#$('#qrcode').qrcode({#}
+        {#    render: 'table',#}
+        {#    text: "{{ game.code }}",#}
+        {#    width: ($(window).width() / 2) - 20,#}
+        {#    height: ($(window).width() / 2) - 20#}
 
     </script>
-	<script type='text/javascript'>
-		(function poll(){
-			setTimeout(function(){
-				console.log("calling myslef");
-				var data = {
-					'game': "{{ game.code }}"
-				};
-				$.ajax({ url: "/get_progress", data, success: function(data){
-					//replace progress table with data from server
-					var progress = document.getElementById("progress").rows[1].cells;	
-					data = data.split("");
-					console.log(data);
-					for (i = 1; i < 6; i++) {
-						progress[i].innerHTML = data[i - 1];
-					}
-					//Setup the next poll recursively
-					poll();
-				}});
-			}, 3000);
-		})();
-		
-	</script>
+    <script type='text/javascript'>
+        (function poll() {
+            setTimeout(function () {
+                console.log("calling myslef");
+                var data = {
+                    'game': "{{ game.code }}"
+                };
+                $.ajax({
+                    url: "/get_progress", data, success: function (data) {
+                        //replace progress table with data from server
+                        var progress = document.getElementById("progress").rows[1].cells;
+                        data = data.split("");
+                        console.log(data);
+                        for (i = 1; i < 6; i++) {
+                            progress[i].innerHTML = data[i - 1];
+                        }
+                        //Setup the next poll recursively
+                        poll();
+                    }
+                });
+            }, 3000);
+        })();
+
+    </script>
 
 {% endblock %}
