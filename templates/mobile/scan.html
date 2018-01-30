@@ -66,16 +66,6 @@
     </div>
 
     <script type="text/javascript">
-        var noSleep = new NoSleep();
-
-        function enableNoSleep() {
-            noSleep.enable();
-            document.removeEventListener('click', enableNoSleep, false);
-        }
-
-        // Enable wake lock.
-        // (must be wrapped in a user input event handler e.g. a mouse or touch handler)
-        document.addEventListener('click', enableNoSleep, false);
 
         alertify.set('notifier', 'position', 'bottom-center');
         alertify.set('notifier', 'delay', 2);
