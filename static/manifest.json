@@ -1,0 +1,12 @@
+{
+  "name": "Photon Folly",
+  "display": "fullscreen",
+  "icons": [
+    {
+      "src": "static/images/icon2.png",
+      "sizes": "48x48",
+      "type": "image/png"
+    }
+  ]
+}
+}
