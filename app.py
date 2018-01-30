@@ -77,7 +77,7 @@ def desktop():
 
 
 def mobile():
-    return render_template("mobile.html")
+    return render_template("mobile/scan.html")
 
 
 def create_game():
