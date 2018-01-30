@@ -30,8 +30,8 @@
         }
 
         #score {
-            width: 150px;
-            height: 150px;
+            width: 20%;
+            height: 10%;
             position: fixed;
             left: 10%;
             background-color: yellow;
@@ -136,7 +136,7 @@
                         window.navigator.vibrate(200)
                     }, 2000);
                 } else {
-                    alertify.error("Photon not in hub");
+                    alertify.error("Photon not part of remaining key");
                     console.log("not in hub")
                 }
                 sending = false;
