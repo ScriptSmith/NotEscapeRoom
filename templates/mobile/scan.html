@@ -97,6 +97,7 @@
             };
             $.get("/add_photon", params, function (data) {
                 if (data === true) {
+                    console.log("Successfully logged photon in progress")
                     state = -1
                 } else {
                     console.log("not in hub")
@@ -121,11 +122,8 @@
                 joined = true;
                 gameId = content;
                 //assign photon spin (unknown to player)
-                localStorage.setItem("spinKnown", "false");
-                var spin = chooseSpin();
-                console.log("Chose spin: " + spin);
-                localStorage.setItem("spin", spin);
                 state = 0; // Pick up photon
+
                 $("#photon").html(state)
 
             } else { // Measure station or hub
@@ -137,10 +135,15 @@
                     }
                 } else {
                     //pass in previous spin and measurement direction
-                    state = measureSpin(localStorage.getItem("spin"), content);
+                    if (state === 0) {
+                        console.log("Assigned random state");
+                        state = chooseSpin()
+                    } else {
+                        console.log("No random state assigned")
+                    }
+                    console.log("Old state: " + state);
+                    state = measureSpin(state, content.slice(7));
                     console.log("Measured state: " + state);
-                    localStorage.setItem("spin", state);
-                    localStorage.setItem("spinKnown", "true");
                     $("#photon").html(state)
                 }
             }

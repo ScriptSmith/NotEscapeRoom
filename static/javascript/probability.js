@@ -13,7 +13,7 @@ var SpinEnum = {
   DOWN: 5,
   DOWNLEFT: 6,
   LEFT: 7,
-  UPLEFT: 8,
+  UPLEFT: 8
 };
 
 var updown = [[SpinEnum.UP], [SpinEnum.UP, SpinEnum.UP, SpinEnum.UP, SpinEnum.DOWN], 

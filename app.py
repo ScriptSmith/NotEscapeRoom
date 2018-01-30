@@ -8,6 +8,8 @@ app.config.from_json('config.json')
 
 db = SQLAlchemy(app)
 
+spin_enum = "↑↗→↘↓↙←↖"
+
 
 class Game(db.Model):
     __tablename__ = "games"
@@ -109,14 +111,18 @@ def progress():
 @app.route('/add_photon')
 def add_to_game():
     game_id = request.args.get('game')
-    photon = request.args.get('photon')
+    photon = spin_enum[int(request.args.get('photon')) - 1]
 
     if game_id and game_id != 'NaN':
         game = Game.query.filter_by(code=game_id).first()
         if game:
-            for i, char in enumerate(game.progress):
+            for i, char in enumerate(game.key):
                 if char == photon:
-                    game.key[i] = photon
+                    if game.progress[i] != '.':
+                        continue
+                    new = list(game.progress)
+                    new[i] = photon
+                    game.progress = "".join(new)
                     return jsonify(True)
     return jsonify(False)
 
