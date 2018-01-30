@@ -6,16 +6,16 @@
             <div id="qrcode"></div>
         </div>
         <div style="float: right; width: 50%;">
-            <table class="pure-table">
+            <table class="pure-table" id="progress">
                 <tr>
                     <td>Key</td>
-                    {% for char in hub.key %}
+                    {% for char in game.key %}
                         <td>{{ char }}</td>
                     {% endfor %}
                 </tr>
                 <tr>
                     <td>Progress</td>
-                    {% for char in hub.progress %}
+                    {% for char in game.progress %}
                         <td>{{ char }}</td>
                     {% endfor %}
                 </tr>
@@ -29,19 +29,22 @@
 	<script type='text/javascript'>
 		(function poll(){
 			setTimeout(function(){
-				var params = {
-					'game': gameId,
+				console.log("calling myslef");
+				var data = {
+					'game': "{{ game.code }}"
 				};
-				$.ajax({ url: "/get_progress", params, success: function(data){
-					//progress diff
-					console.log("polling");
-					//Update page
-					console.log("data is " + data);
-					//{{ game.code }}
+				$.ajax({ url: "/get_progress", data, success: function(data){
+					//replace progress table with data from server
+					var progress = document.getElementById("progress").rows[1].cells;	
+					data = data.split("");
+					console.log(data);
+					for (i = 1; i < 6; i++) {
+						progress[i].innerHTML = data[i - 1];
+					}
 					//Setup the next poll recursively
 					poll();
-				}, dataType: "json"});
-			}, 30000);
+				}});
+			}, 3000);
 		})();
 		
 	</script>
