@@ -1,6 +1,6 @@
 {
   "name": "Photon Folly",
-  "display": "fullscreen",
+  "display": "standalone",
   "icons": [
     {
       "src": "static/images/icon.png",
