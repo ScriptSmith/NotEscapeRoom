@@ -6,7 +6,9 @@
     <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css"
           integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
     <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.11.0/build/alertify.min.js"></script>
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.11.0/build/css/alertify.min.css"/>
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.11.0/build/css/themes/default.min.css"/>
     <style>{% block style %}{% endblock %}</style>
     <script
             src="https://code.jquery.com/jquery-3.2.1.min.js"
@@ -14,8 +16,9 @@
             crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='javascript/jquery.qrcode.min.js') }}"></script>
-	<!-- instascan.js -->
-	<script type="text/javascript" src="{{url_for('static', filename='javascript/instascan.min.js')}}"></script>
+    <!-- instascan.js -->
+    <script type="text/javascript" src="{{ url_for('static', filename='javascript/instascan.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='javascript/NoSleep.min.js') }}"></script>
 
     {% block head %}{% endblock %}
 </head>

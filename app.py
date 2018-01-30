@@ -98,16 +98,18 @@ def generate_join_code():
 def generate_key(length):
     return ''.join(random.choices("↖↗↘↙←↓↑→", k=length))
 
+
 @app.route('/get_progress')
 def progress():
-	# get the current key progress
+    # get the current key progress
     game_id = request.args.get('game')
     if game_id and game_id != 'NaN':
         game = Game.query.filter_by(code=game_id).first()
         if game:
-    	    return game.progress
+            return game.progress
     return jsonify(False)
-	
+
+
 @app.route('/add_photon')
 def add_to_game():
     game_id = request.args.get('game')

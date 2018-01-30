@@ -16,6 +16,9 @@ var SpinEnum = {
   UPLEFT: 8
 };
 
+var spin_array = "↑↗→↘↓↙←↖";
+
+
 var updown = [[SpinEnum.UP], [SpinEnum.UP, SpinEnum.UP, SpinEnum.UP, SpinEnum.DOWN], 
 	[SpinEnum.UP, SpinEnum.DOWN, SpinEnum.UP, SpinEnum.DOWN], 
 	[SpinEnum.UP, SpinEnum.DOWN, SpinEnum.DOWN, SpinEnum.DOWN], [SpinEnum.DOWN], 
@@ -48,19 +51,19 @@ function measureSpin(spin, measurementDirection) {
 			case "UPDOWN" : 
 				var choices = updown[spin - 1];
 				console.log("choices are: " + choices);
-				return choices[Math.floor((Math.random() * (choices.length - 1)))];
+				return choices[Math.floor((Math.random() * (choices.length)))];
 			case "LEFTRIGHT" :
 				var choices = leftright[spin - 1];
 				console.log("choices are: " + choices);
-				return choices[Math.floor((Math.random() * (choices.length - 1)))];
+				return choices[Math.floor((Math.random() * (choices.length)))];
 			case "UPRIGHTDOWNLEFT"	:
 				var choices = uprightdownleft[spin - 1];
 				console.log("choices are: " + choices);
-				return choices[Math.floor((Math.random() * (choices.length - 1)))];
+				return choices[Math.floor((Math.random() * (choices.length)))];
 			case "UPLEFTDOWNRIGHT" :
 				var choices = upleftdownright[spin - 1];
 				console.log("choices are: " + choices);
-				return choices[Math.floor((Math.random() * (choices.length - 1)))];
+				return choices[Math.floor((Math.random() * (choices.length)))];
 			default :
 				break;
 	}

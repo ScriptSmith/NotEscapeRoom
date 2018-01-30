@@ -30,13 +30,15 @@
         }
 
         #photon {
-            width: 50%;
+            width: 20%;
             height: 10%;
             position: fixed;
-            left: 25%;
+            left: 40%;
             background-color: red;
             z-index: 10000;
-            font-size: 40px;
+            font-size: 100px;
+            text-align: center;
+            border-radius: 10px;
         }
 
         #info {
@@ -48,12 +50,14 @@
             z-index: 10000;
 
         }
+        .ajs-message {
+            font-size: 40px;
+        }
+
     </style>
 {% endblock %}
 
 {% block body %}
-    <br>
-
     <div id="photon"></div>
     <div id="info" onclick="localStorage.clear();"></div>
     <div class="video-container">
@@ -61,6 +65,19 @@
     </div>
 
     <script type="text/javascript">
+        var noSleep = new NoSleep();
+
+        function enableNoSleep() {
+            noSleep.enable();
+            document.removeEventListener('click', enableNoSleep, false);
+        }
+
+        // Enable wake lock.
+        // (must be wrapped in a user input event handler e.g. a mouse or touch handler)
+        document.addEventListener('click', enableNoSleep, false);
+
+        alertify.set('notifier', 'position', 'bottom-center');
+        alertify.set('notifier', 'delay', 2);
 
         Instascan.Camera.getCameras().then(function (cameras) {
             if (cameras.length > 0) {
@@ -90,6 +107,7 @@
             if (sending) {
                 return;
             }
+            alertify.message("Sending photon to hub");
             sending = true;
             var params = {
                 'game': gameId,
@@ -97,15 +115,22 @@
             };
             $.get("/add_photon", params, function (data) {
                 if (data === true) {
-                    console.log("Successfully logged photon in progress")
-                    state = -1
+                    console.log("Successfully logged photon in progress");
+                    alertify.success("Photon matched!");
+                    state = 0;
+                    setTimeout(function () {
+                        setHeading(state);
+                        alertify.message("Grabbed new photon");
+                    }, 2000);
                 } else {
+                    alertify.error("Photon not in hub");
                     console.log("not in hub")
                 }
                 sending = false;
             }).fail(function (data) {
                 console.log("error");
                 console.log(data);
+                alertify.error("Something went wrong");
                 sending = false;
             })
         }
@@ -116,38 +141,54 @@
             backgroundScan: false
         });
 
+        function setHeading(state) {
+            if (state === 0) {
+                var heading = "•"
+            } else {
+                var heading = spin_array[state - 1];
+            }
+            $("#photon").html(heading);
+        }
+
         scanner.addListener('scan', function (content) {
-            alert(content);
-            if (!joined) { // Join game
-                joined = true;
-                gameId = content;
-                //assign photon spin (unknown to player)
-                state = 0; // Pick up photon
 
-                $("#photon").html(state)
+                console.info("Read: " + content);
+                if (!joined) { // Join game
+                    joined = true;
+                    gameId = content;
+                    //assign photon spin (unknown to player)
+                    state = 0; // Pick up photon
+                    alertify.success("Joined game");
+                    setTimeout(function () {
+                        setHeading(state);
+                        alertify.message("Grabbed new photon")
+                    }, 2000);
 
-            } else { // Measure station or hub
-                if (content === gameId) { // Hub
-                    if (state !== 0) { // Already have photon
-                        sendPhoton()
+                } else { // Measure station or hub
+                    if (content === gameId) { // Hub
+                        if (state !== 0) { // Already have photon
+                            sendPhoton()
+                        }
                     } else {
-                        state = 0;
+                        //pass in previous spin and measurement direction
+                        if (state === 0) {
+                            console.log("Assigned random state");
+                            state = chooseSpin();
+                        } else {
+                            console.log("No random state assigned")
+                        }
+                        console.log("Old state: " + state);
+                        state = measureSpin(state, content.slice(7));
+                        console.log("Measured state: " + state);
+                        alertify.message("Measuring...");
+                        setTimeout(function () {
+                            setHeading(state);
+                            alertify.success("Measured");
+                        }, 3000)
                     }
-                } else {
-                    //pass in previous spin and measurement direction
-                    if (state === 0) {
-                        console.log("Assigned random state");
-                        state = chooseSpin()
-                    } else {
-                        console.log("No random state assigned")
-                    }
-                    console.log("Old state: " + state);
-                    state = measureSpin(state, content.slice(7));
-                    console.log("Measured state: " + state);
-                    $("#photon").html(state)
                 }
             }
-        });
+        );
         Instascan.Camera.getCameras().then(function (cameras) {
             if (cameras.length > 0) {
                 if (cameras.length > 1) {
