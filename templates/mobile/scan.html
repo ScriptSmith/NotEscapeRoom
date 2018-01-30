@@ -35,22 +35,34 @@
             float: left;
             left: 10%;
             background-color: yellow;
-            font-size: 20pt;
+            font-size: 25pt;
             text-align: center;
         }
 
         #photon {
             width: 60%;
-            height: 100%;
-            float: left;
-            background-color: red;
-            font-size: 70pt;
-            line-height: 0.65;
+            height: 40%;
+            background-color: rgba(255, 0, 0, 0.5);
+            font-size: 200pt;
+            line-height: 2;
             text-align: center;
+            font-weight: 900;
+            text-shadow: -3px 0 black,
+            0 3px black,
+            3px 0 black,
+            0 -3px black,
+            -3px -3px black,
+            3px 3px black,
+            -3px 3px black,
+            3px -3px black;
+            position: fixed;
+            left: 20%;
+            top: 40%;
+            z-index: 10000;
         }
 
         #info {
-            float: left;
+            float: right;
             width: 20%;
             height: 100%;
             background-color: blue;
@@ -76,9 +88,11 @@
 {% block body %}
     <div id="topbar">
         <div id="score"></div>
-        <div id="photon"></div>
         <div id="info">Help</div>
     </div>
+
+    <div id="photon"></div>
+
 
     <div class="video-container">
         <video id="preview" style=""></video>
