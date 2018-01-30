@@ -111,7 +111,10 @@ def generate_join_code():
 def generate_key(length):
     return ''.join(random.choices("↖↗↘↙←↓↑→", k=length))
 
-
+def progress():
+	//get the current key progress
+	
+	
 @app.route('/add_photon')
 def add_to_game():
     game_id = request.args.get('game')
@@ -122,9 +125,9 @@ def add_to_game():
         if game:
             hub = Hub.query.filter_by(id=game.hub)
             if hub:
-                for i, char in enumerate(hub.progress):
+                for i, char in enumerate(hub.key):
                     if char == photon:
-                        hub[i] = photon
+                        hub.progress[i] = photon
                         return jsonify(True)
     return jsonify(False)
 
