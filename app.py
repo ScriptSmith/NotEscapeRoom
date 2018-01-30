@@ -81,7 +81,8 @@ def mobile():
 def create_game():
     game = Game(code=generate_join_code(), complete=False,
                 key=generate_key(5), progress='.....')
-    return db.session.merge(game)
+    db.session.add(game)
+    return game
 
 
 def generate_join_code():
@@ -95,9 +96,15 @@ def generate_join_code():
 def generate_key(length):
     return ''.join(random.choices("↖↗↘↙←↓↑→", k=length))
 
+@app.route('/get_progress')
 def progress():
-	//get the current key progress
-	
+	# get the current key progress
+    game_id = request.args.get('game')
+    if game_id and game_id != 'NaN':
+        game = Game.query.filter_by(code=game_id).first()
+        if game:
+    	    return game.progress
+    return jsonify(False)
 	
 @app.route('/add_photon')
 def add_to_game():
@@ -107,18 +114,10 @@ def add_to_game():
     if game_id and game_id != 'NaN':
         game = Game.query.filter_by(code=game_id).first()
         if game:
-<<<<<<< HEAD
-            hub = Hub.query.filter_by(id=game.hub)
-            if hub:
-                for i, char in enumerate(hub.key):
-                    if char == photon:
-                        hub.progress[i] = photon
-=======
-                for i, char in enumerate(game.progress):
-                    if char == photon:
-                        game.key[i] = photon
->>>>>>> e1a785b0427a54f38fc81b61229b94e71c17cc4d
-                        return jsonify(True)
+            for i, char in enumerate(game.progress):
+                if char == photon:
+                    game.key[i] = photon
+                    return jsonify(True)
     return jsonify(False)
 
 
@@ -128,5 +127,5 @@ def instascan():
 
 
 if __name__ == '__main__':
-    create_tables()
+    # create_tables()
     app.run(debug=True, host='0.0.0.0')

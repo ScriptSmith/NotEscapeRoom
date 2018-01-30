@@ -29,11 +29,15 @@
 	<script type='text/javascript'>
 		(function poll(){
 			setTimeout(function(){
-				$.ajax({ url: "server", success: function(data){
+				var params = {
+					'game': gameId,
+				};
+				$.ajax({ url: "/get_progress", params, success: function(data){
 					//progress diff
-					
+					console.log("polling");
 					//Update page
-					
+					console.log("data is " + data);
+					//{{ game.code }}
 					//Setup the next poll recursively
 					poll();
 				}, dataType: "json"});
