@@ -34,6 +34,10 @@
                 background-position: 94% 0%;
             }
         }
+
+        table {
+            font-size: 20px;
+        }
     </style>
 {% endblock %}
 
@@ -43,8 +47,9 @@
             <canvas id="qr"></canvas>
         </div>
         <div style="float: right; width: 50%;">
-            <table class="pure-table" id="progress">
-                <tr>
+            <img src="{{ url_for('static', filename='images/logo.png') }}">
+            <table class="pure-table pure-table-bordered" id="progress">
+                <tr class="">
                     <td>Key</td>
                     {% for char in game.key %}
                         <td>{{ char }}</td>
@@ -57,7 +62,7 @@
                     {% endfor %}
                 </tr>
             </table>
-            <a href="end">New game</a></div>
+            <a class="pure-button pure-button-primary" href="end">New game</a></div>
     </div>
     <script>
         var qr = new QRious({
