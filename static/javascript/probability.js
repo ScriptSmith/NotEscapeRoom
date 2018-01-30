@@ -1,19 +1,19 @@
 function chooseSpin() {
 	//assign a random spin to a new photon
-    var spins = [0, 1, 2, 3, 4, 5, 6, 7];
+    var spins = [1, 2, 3, 4, 5, 6, 7, 8];
 	//choose a random index from the array
 	return spins[Math.floor((Math.random() * 7))];
 }
 
 var SpinEnum = {
-  UP: 0,
-  UPRIGHT: 1,
-  RIGHT: 2,
-  DOWNRIGHT: 3,
-  DOWN: 4,
-  DOWNLEFT: 5,
-  LEFT: 6,
-  UPLEFT: 7,
+  UP: 1,
+  UPRIGHT: 2,
+  RIGHT: 3,
+  DOWNRIGHT: 4,
+  DOWN: 5,
+  DOWNLEFT: 6,
+  LEFT: 7,
+  UPLEFT: 8,
 };
 
 var updown = [[SpinEnum.UP], [SpinEnum.UP, SpinEnum.UP, SpinEnum.UP, SpinEnum.DOWN], 
@@ -46,25 +46,21 @@ var upleftdownright = [[SpinEnum.UPLEFT, SpinEnum.UPLEFT, SpinEnum.UPLEFT, SpinE
 function measureSpin(spin, measurementDirection) {
 	switch(measurementDirection) {
 			case "UPDOWN" : 
-				var choices = updown[spin];
+				var choices = updown[spin - 1];
 				console.log("choices are: " + choices);
-				localStorage.setItem("spin", choices[Math.floor((Math.random() * (choices.length - 1)))]);
-				break;
+				return choices[Math.floor((Math.random() * (choices.length - 1)))];
 			case "LEFTRIGHT" :
-				var choices = leftright[spin];
+				var choices = leftright[spin - 1];
 				console.log("choices are: " + choices);
-				localStorage.setItem("spin", choices[Math.floor((Math.random() * (choices.length - 1)))]);
-				break;
+				return choices[Math.floor((Math.random() * (choices.length - 1)))];
 			case "UPRIGHTDOWNLEFT"	:
-				var choices = uprightdownleft[spin];
+				var choices = uprightdownleft[spin - 1];
 				console.log("choices are: " + choices);
-				localStorage.setItem("spin", choices[Math.floor((Math.random() * (choices.length - 1)))]);
-				break;
+				return choices[Math.floor((Math.random() * (choices.length - 1)))];
 			case "UPLEFTDOWNRIGHT" :
-				var choices = upleftdownright[spin];
+				var choices = upleftdownright[spin - 1];
 				console.log("choices are: " + choices);
-				localStorage.setItem("spin", choices[Math.floor((Math.random() * (choices.length - 1)))]);
-				break;
+				return choices[Math.floor((Math.random() * (choices.length - 1)))];
 			default :
 				break;
 	}

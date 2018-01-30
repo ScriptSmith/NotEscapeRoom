@@ -58,10 +58,12 @@ def end():
 @app.route('/instructions')
 def instructions():
     return render_template("mobile/instructions.html")
-	
+
+
 @app.route('/scan')
 def scan():
-	return render_template("mobile/scan.html")
+    return render_template("mobile/scan.html")
+
 
 def desktop():
     hub_id = session.get('hub')
@@ -83,7 +85,6 @@ def desktop():
 
 
 def mobile():
-    # do stuff
     return render_template("mobile.html")
 
 
@@ -111,11 +112,28 @@ def generate_key(length):
     return ''.join(random.choices("↖↗↘↙←↓↑→", k=length))
 
 
+@app.route('/add_photon')
+def add_to_game():
+    game_id = request.args.get('game')
+    photon = request.args.get('photon')
+
+    if game_id and game_id != 'NaN':
+        game = Game.query.filter_by(code=game_id).first()
+        if game:
+            hub = Hub.query.filter_by(id=game.hub)
+            if hub:
+                for i, char in enumerate(hub.progress):
+                    if char == photon:
+                        hub[i] = photon
+                        return jsonify(True)
+    return jsonify(False)
+
+
 @app.route('/scan')
 def instascan():
     return render_template("instascan.html")
 
 
 if __name__ == '__main__':
-    create_tables()
-    app.run(debug=True)
+    # create_tables()
+    app.run(debug=True, host='0.0.0.0')

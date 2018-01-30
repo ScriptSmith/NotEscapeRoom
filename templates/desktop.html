@@ -1,20 +1,30 @@
 {% extends "base.html" %}
 
 {% block body %}
-    <table class="pure-table">
-        <tr>
-            <td>Key</td>
-            {% for char in hub.key %}
-                <td>{{ char }}</td>
-            {% endfor %}
-        </tr>
-        <tr>
-            <td>Progress</td>
-            {% for char in hub.progress %}
-                <td>{{ char }}</td>
-            {% endfor %}
-        </tr>
-    </table>
-    <p>Join Code: {{ game.code }}</p>
-    <a href="end">New game</a>
+    <div style="width: 100%; padding: 20px;">
+        <div style="float: left; width: 50%;">
+            <div id="qrcode"></div>
+        </div>
+        <div style="float: right; width: 50%;">
+            <table class="pure-table">
+                <tr>
+                    <td>Key</td>
+                    {% for char in hub.key %}
+                        <td>{{ char }}</td>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    <td>Progress</td>
+                    {% for char in hub.progress %}
+                        <td>{{ char }}</td>
+                    {% endfor %}
+                </tr>
+            </table>
+            <a href="end">New game</a></div>
+    </div>
+    <script>
+    $('#qrcode').qrcode({render: 'table',text: "{{ game.code }}", width: ($(window).width()/2) -20, height: ($(window).width()/2) - 20});
+
+    </script>
+
 {% endblock %}
