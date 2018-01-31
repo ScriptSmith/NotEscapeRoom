@@ -82,7 +82,7 @@ def mobile():
 
 def create_game():
     game = Game(code=generate_join_code(), complete=False,
-                key=generate_key(15), progress='...............')
+                key=generate_key(5), progress='.....')
     db.session.add(game)
     return game
 
